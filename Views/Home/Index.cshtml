@@ -1,0 +1,99 @@
+﻿@model BookStore.ViewModels.HomeViewModel
+
+@section Styles {
+    <style>
+        .book-card {
+            border: 1px solid black;
+            padding: 15px;
+            margin: 10px;
+            width: 250px;
+            display: inline-block;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        function confirmRemove() {
+            return confirm("Remove this book?");
+        }
+    </script>
+}
+
+<h2>Book Store</h2>
+
+<hr />
+
+<h3>Add Book</h3>
+
+<form method="post" action="/Home/AddBook">
+
+    <label>Title</label>
+    <input type="text" name="Title" required />
+
+    <label>Price</label>
+    <input type="number" name="Price" step="0.01" required />
+
+    <label>Author</label>
+    <select name="AuthorId">
+        @foreach (var author in Model.Authors)
+        {
+            <option value="@author.Id">@author.Name</option>
+        }
+    </select>
+
+    <button type="submit">Add Book</button>
+
+</form>
+
+<hr />
+
+<h3>Add Author</h3>
+
+<form method="post" action="/Home/AddAuthor">
+
+    <label>Name</label>
+    <input type="text" name="Name" required />
+
+    <label>Country</label>
+    <input type="text" name="Country" required />
+
+    <button type="submit">Add Author</button>
+
+</form>
+
+<hr />
+
+<h3>Available Books</h3>
+
+@if (Model.Books.Count == 0)
+{
+    <p>No books available</p>
+}
+else
+{
+    @foreach (var book in Model.Books)
+    {
+        <div class="book-card">
+
+            <h4>@book.Title</h4>
+
+            <p>Author: @book.AuthorName</p>
+
+            <p>Price: Rs. @book.Price</p>
+
+            <form method="post"
+                  action="/Home/RemoveBook"
+                  onsubmit="return confirmRemove()">
+
+                <input type="hidden" name="id" value="@book.Id" />
+
+                <button type="submit" class="btn btn-danger">
+                    Remove
+                </button>
+
+            </form>
+
+        </div>
+    }
+}
